@@ -11,7 +11,7 @@ $action  = $request["action"];
 
 switch ($action)
 {
-	case "remember_media_gallery_mode":
-		$onload_show_gallery = ft_load_module_field("media_gallery", "onload_show_gallery", "onload_show_gallery");
-		break;
+  case "remember_media_gallery_mode":
+    $onload_show_gallery = ft_load_module_field("media_gallery", "onload_show_gallery", "onload_show_gallery");
+    break;
 }

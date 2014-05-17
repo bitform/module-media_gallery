@@ -28,9 +28,9 @@ $account_type = $_SESSION["ft"]["account"]["account_type"];
 $media_field_info = array();
 for ($i=0; $i<count($image_field_info[$form_id]["media_info"]); $i++)
 {
-	$field_id   = $image_field_info[$form_id]["media_info"][$i]["field_id"];
-	$media_type = $image_field_info[$form_id]["media_info"][$i]["media_type"];
-	$media_field_info[$field_id] = $media_type;
+  $field_id   = $image_field_info[$form_id]["media_info"][$i]["field_id"];
+  $media_type = $image_field_info[$form_id]["media_info"][$i]["media_type"];
+  $media_field_info[$field_id] = $media_type;
 }
 
 $title_format = $image_field_info[$form_id]["title"];
@@ -39,7 +39,7 @@ $submission_ids = explode(",", $submission_ids_str);
 $submission_info = array();
 foreach ($submission_ids as $submission_id)
 {
-	$curr_submission_fields = ft_get_submission($form_id, $submission_id);
+  $curr_submission_fields = ft_get_submission($form_id, $submission_id);
 
   // for each submission, extract the following information for each image field
   $placeholders = array();
@@ -48,33 +48,33 @@ foreach ($submission_ids as $submission_id)
     if ($field_info["field_type"] == "system")
       continue;
 
-  	$field_name = $field_info["field_name"];
-  	$placeholders["ANSWER_{$field_name}"] = $field_info["content"];
+    $field_name = $field_info["field_name"];
+    $placeholders["ANSWER_{$field_name}"] = $field_info["content"];
   }
 
   foreach ($curr_submission_fields as $field_info)
   {
-  	if (!array_key_exists($field_info["field_id"], $media_field_info))
-  	  continue;
+    if (!array_key_exists($field_info["field_id"], $media_field_info))
+      continue;
 
-  	$media_type = $media_field_info[$field_info["field_id"]];
+    $media_type = $media_field_info[$field_info["field_id"]];
 
-  	$filename = $field_info["content"];
-  	if (empty($filename))
-  	  continue;
+    $filename = $field_info["content"];
+    if (empty($filename))
+      continue;
 
-  	$field_settings = ft_get_extended_field_settings($field_info["field_id"], "core");
-  	$folder_url = $field_settings["file_upload_url"];
+    $field_settings = ft_get_extended_field_settings($field_info["field_id"], "core");
+    $folder_url = $field_settings["file_upload_url"];
 
-  	$title = ft_eval_smarty_string($title_format, $placeholders);
+    $title = ft_eval_smarty_string($title_format, $placeholders);
 
-		$submission_info[] = array(
-		  "submission_id" => $submission_id,
-		  "folder_url"    => $folder_url,
-		  "filename"      => $filename,
-		  "title"         => $title,
-		  "media_type"    => $media_type
-		);
+    $submission_info[] = array(
+      "submission_id" => $submission_id,
+      "folder_url"    => $folder_url,
+      "filename"      => $filename,
+      "title"         => $title,
+      "media_type"    => $media_type
+    );
   }
 }
 
@@ -84,43 +84,43 @@ echo <<<EOF
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <data>
-	<settings>
-		<thumbMaxHeight>{$module_settings["default_thumb_height"]}</thumbMaxHeight>
-		<thumbMaxWidth>{$module_settings["default_thumb_width"]}</thumbMaxWidth>
-		<thumbPreserveAspectRatio>{$module_settings["preserve_thumb_aspect_ratio"]}</thumbPreserveAspectRatio>
-	</settings>
+  <settings>
+    <thumbMaxHeight>{$module_settings["default_thumb_height"]}</thumbMaxHeight>
+    <thumbMaxWidth>{$module_settings["default_thumb_width"]}</thumbMaxWidth>
+    <thumbPreserveAspectRatio>{$module_settings["preserve_thumb_aspect_ratio"]}</thumbPreserveAspectRatio>
+  </settings>
 
-	<environment>
-		<accountType>{$account_type}</accountType>
-	</environment>
+  <environment>
+    <accountType>{$account_type}</accountType>
+  </environment>
 
-	<lang>
-		<phrase_submission_id>{$LANG["phrase_submission_id"]}</phrase_submission_id>
-		<word_filename>{$LANG["media_gallery"]["word_filename"]}</word_filename>
-		<word_dimensions>{$LANG["media_gallery"]["word_dimensions"]}</word_dimensions>
-		<phrase_no_media_files>{$LANG["media_gallery"]["phrase_no_media_files"]}</phrase_no_media_files>
-		<phrase_gallery_settings>{$LANG["media_gallery"]["phrase_gallery_settings"]}</phrase_gallery_settings>
-	</lang>
+  <lang>
+    <phrase_submission_id>{$LANG["phrase_submission_id"]}</phrase_submission_id>
+    <word_filename>{$LANG["media_gallery"]["word_filename"]}</word_filename>
+    <word_dimensions>{$LANG["media_gallery"]["word_dimensions"]}</word_dimensions>
+    <phrase_no_media_files>{$LANG["media_gallery"]["phrase_no_media_files"]}</phrase_no_media_files>
+    <phrase_gallery_settings>{$LANG["media_gallery"]["phrase_gallery_settings"]}</phrase_gallery_settings>
+  </lang>
 
-	<submissions>
+  <submissions>
 
 EOF;
 
 foreach ($submission_info as $submission)
 {
   echo <<<EOF
-		<submission>
-			<submissionID>{$submission["submission_id"]}</submissionID>
-			<title>{$submission["title"]}</title>
-			<filename>{$submission["filename"]}</filename>
-			<folderURL>{$submission["folder_url"]}</folderURL>
-			<mediaType>{$submission["media_type"]}</mediaType>
-		</submission>
+    <submission>
+      <submissionID>{$submission["submission_id"]}</submissionID>
+      <title>{$submission["title"]}</title>
+      <filename>{$submission["filename"]}</filename>
+      <folderURL>{$submission["folder_url"]}</folderURL>
+      <mediaType>{$submission["media_type"]}</mediaType>
+    </submission>
 
 EOF;
 }
 
 echo <<<EOF
-	</submissions>
+  </submissions>
 </data>
 EOF;
